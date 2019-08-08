@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+
+  <meta name="description" content="You Are The JavaScript In My HTML">
+
+
+<link rel="alternate" href="/atom.xml" title="Xing&#39;s Blog" type="application/atom+xml">
+<meta name="theme-color" content="#5badf0">
+<title>OJ-Counting Cliques - Xing&#39;s Blog</title>
+<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+<link rel="shortcut icon" href="/favicon.png">
+<link rel="stylesheet" href="/css/style.css">
+
+<nav class="main-nav">
+	
+	    <a href="/"> Home</a>
+	
+	
+	    <a href="/about/">About</a>
+	
+	    <a href="/archives/">Archives</a>
+	
+	<!-- <a class="cta" href="/atom.xml" data-no-instant>Subscribe</a> -->
+</nav>
+
+<section id="wrapper">
+    <article class="post">
+    <header>
+        
+            <h1>OJ-Counting Cliques</h1>
+        
+        <h2 class="headline">Jul 07 2019
+        
+        </h2>
+    </header>
+</article>
+<section id="post-body"><h1 id="Description"><a href="#Description" class="headerlink" title="Description"></a>Description</h1><p>A clique is a complete graph, in which there is an edge between every pair of the vertices. Given a graph with N vertices and M edges, your task is to count the number of cliques with a specific size S in the graph. </p>
+<h1 id="Input"><a href="#Input" class="headerlink" title="Input"></a>Input</h1><p>The first line is the number of test cases. For each test case, the first line contains 3 integers N,M and S (N ≤ 100,M ≤ 1000,2 ≤ S ≤ 10), each of the following M lines contains 2 integers u and v (1 ≤ u &lt; v ≤ N), which means there is an edge between vertices u and v. It is guaranteed that the maximum degree of the vertices is no larger than 20. </p>
+<h1 id="Output"><a href="#Output" class="headerlink" title="Output"></a>Output</h1><p>For each test case, output the number of cliques with size S in the graph. </p>
+<h1 id="Sample-Input"><a href="#Sample-Input" class="headerlink" title="Sample Input"></a>Sample Input</h1><blockquote>
+<p>3<br>4 3 2<br>1 2<br>2 3<br>3 4<br>5 9 3<br>1 3<br>1 4<br>1 5<br>2 3<br>2 4<br>2 5<br>3 4<br>3 5<br>4 5<br>6 15 4<br>1 2<br>1 3<br>1 4<br>1 5<br>1 6<br>2 3<br>2 4<br>2 5<br>2 6<br>3 4<br>3 5<br>3 6<br>4 5<br>4 6<br>5 6</p>
+</blockquote>
+<h1 id="Sample-Output"><a href="#Sample-Output" class="headerlink" title="Sample Output"></a>Sample Output</h1><blockquote>
+<p>3<br>7<br>15</p>
+</blockquote>
+<h1 id="Analysis"><a href="#Analysis" class="headerlink" title="Analysis"></a>Analysis</h1><p>题意为在一个有N个顶点，M条边的无向图中求顶点个数为S的完全图的个数。🍔🍔</p>
+<p>采用深度优先搜索，在搜索过程中用path记录搜索路径，并且每新增一个顶点都要检验顶点是否与所有旧顶点都有连接，即每步都要检验是否为完全图，直到顶点个数达到S则计数加一。</p>
+<h1 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAX_N=<span class="number">102</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAX_S=<span class="number">12</span>;</span><br><span class="line"><span class="keyword">int</span> n,N,M,S,res,a,b;</span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; edge[MAX_N];<span class="comment">//邻接表 </span></span><br><span class="line"><span class="keyword">int</span> path[MAX_N];<span class="comment">//记录路径 </span></span><br><span class="line"><span class="keyword">bool</span> mm[MAX_N][MAX_N];<span class="comment">//边集 </span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">()</span></span>&#123;<span class="comment">//初始化 </span></span><br><span class="line">	res=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=N;i++)&#123;</span><br><span class="line">		edge[i].clear();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">memset</span>(path,<span class="number">0</span>,<span class="keyword">sizeof</span>(path));</span><br><span class="line">	<span class="built_in">memset</span>(mm,<span class="literal">false</span>,<span class="keyword">sizeof</span>(mm));</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">check</span><span class="params">(<span class="keyword">int</span> pos,<span class="keyword">int</span> deep)</span></span>&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=deep;i++)&#123;<span class="comment">//检查新加入的节点是否和所有旧节点都有连接 </span></span><br><span class="line">		<span class="keyword">if</span>(mm[pos][path[i]]==<span class="literal">false</span>)&#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">false</span>; </span><br><span class="line">		&#125;</span><br><span class="line">	&#125; </span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> pre,<span class="keyword">int</span> deep)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(deep==S)&#123;<span class="comment">//若完全图节点个数达到要求 计数后返回 </span></span><br><span class="line">		res++;</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;edge[pre].size();i++)&#123;<span class="comment">//遍历邻接表 </span></span><br><span class="line">		<span class="keyword">if</span>(check(edge[pre][i],deep))&#123;<span class="comment">//新加入节点后是完全图 </span></span><br><span class="line">			path[deep+<span class="number">1</span>]=edge[pre][i];<span class="comment">//加入节点 </span></span><br><span class="line">			dfs(edge[pre][i],deep+<span class="number">1</span>);<span class="comment">//深度优先搜索 </span></span><br><span class="line">			path[deep+<span class="number">1</span>]=<span class="number">0</span>;<span class="comment">//回溯 </span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span>;</span><br><span class="line">&#125;		</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="built_in">cin</span>&gt;&gt;n;</span><br><span class="line">	<span class="keyword">while</span>(n--)&#123;</span><br><span class="line">		<span class="built_in">cin</span>&gt;&gt;N&gt;&gt;M&gt;&gt;S;<span class="comment">//N顶点数 M边数 S完全图顶点数 </span></span><br><span class="line">		init(); <span class="comment">//初始化 </span></span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;M;i++)&#123;<span class="comment">//输入边的信息 </span></span><br><span class="line">			<span class="built_in">cin</span>&gt;&gt;a&gt;&gt;b;<span class="comment">//临时变量 </span></span><br><span class="line">			<span class="keyword">if</span>(a&gt;b)&#123;</span><br><span class="line">				swap(a,b);</span><br><span class="line">			&#125;</span><br><span class="line">			edge[a].push_back(b);</span><br><span class="line">			mm[a][b]=<span class="literal">true</span>;</span><br><span class="line">			mm[b][a]=<span class="literal">true</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=N;i++)&#123;</span><br><span class="line">			path[<span class="number">1</span>]=i;</span><br><span class="line">			dfs(i,<span class="number">1</span>);</span><br><span class="line">			path[<span class="number">1</span>]=<span class="number">0</span>; </span><br><span class="line">		&#125;</span><br><span class="line">		<span class="built_in">cout</span>&lt;&lt;res&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</section>
+    
+
+    <footer id="post-meta" class="clearfix">
+        <a href="/">
+        <img class="avatar" src="/images/avatar.png">
+        <div>
+            <span class="dark">Xing&#39;s Blog</span>
+            <span>You Are The JavaScript In My HTML</span>
+        </div>
+        </a>
+        <section id="sharing">
+            <a title="Share to Twitter" class="twitter" href="https://github.com/"><span class="icon-twitter">GitHub</span></a>
+            <a title="Share to Facebook" class="facebook" href="https://www.zhihu.com/"><span class="icon-facebook-sign">ZhiHu</span>
+            </a>
+        </section>
+    </footer>
+
+<!-- 
+  <section id="comment">
+    <button class="btn" id="loadcmts" onclick="cmts.load();">Load Comments</button>
+    <div id="gitment"></div>
+    <script src='/js/gitment.browser.js'></script>
+    <link rel="stylesheet" href=''>
+    <script>
+      var cmts={
+        load:function cmts(){
+          var gitment = new Gitment({
+          
+            id: "OJ-Counting Cliques",
+          
+            owner: "",
+            repo: "",
+            oauth: {
+              client_id: "",
+              client_secret: "",
+            },
+          })
+          gitment.render('gitment');
+          var loadcmt = document.getElementById("loadcmts");
+          var imyourfather = loadcmt.parentNode;
+          imyourfather.removeChild(loadcmts)
+        }
+      }
+    </script>
+  </section>
+ -->
+
+<!-- 阅读更多 -->
+<!-- 
+    
+        <ul id="post-list" class="archive readmore">
+        <h3>Read more</h3>
+        
+            <li>
+    <aside class="dates">Aug 09 2019</aside>
+    <a href="/2019/08/09/hello-world/">Hello World</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 22 2019</aside>
+    <a href="/2019/07/22/Android开发-利用OkHTTP与服务器通信/">Android开发-利用OkHTTP与服务器通信</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 19 2019</aside>
+    <a href="/2019/07/19/Android开发-调用讯飞语音SDK/">Android开发-调用讯飞语音SDK</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 16 2019</aside>
+    <a href="/2019/07/16/Android开发-百度地图SDK的配置与使用/">Android开发-百度地图SDK的配置与使用</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 09 2019</aside>
+    <a href="/2019/07/09/Android开发-不同Activity之间的跳转/">Android开发-不同Activity之间的跳转</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 07 2019</aside>
+    <a href="/2019/07/07/JavaScript-学习笔记/">JavaScript-学习笔记</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 07 2019</aside>
+    <a href="/2019/07/07/OJ-Counting-Cliques/">OJ-Counting Cliques</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 06 2019</aside>
+    <a href="/2019/07/06/Android开发-上传和更新项目到GitHub/">Android开发-上传和更新项目到GitHub</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 04 2019</aside>
+    <a href="/2019/07/04/Android开发-蓝牙RSSI定位/">Android开发-蓝牙RSSI定位</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 02 2019</aside>
+    <a href="/2019/07/02/Android开发-蓝牙模块/">Android开发-蓝牙模块</a>
+    <h2></h2>
+</li>
+        
+        </ul>
+    
+ -->
+	<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<footer id="footer">
+	<div id="social">
+		<p class="small">© Copyright 2019
+			<a href="/"> lil-Xing </a>
+		</p>
+	</div>
+	<div class="powered-by" style="text-align: center;color: #bbb;">
+		<span id="busuanzi_container_site_uv">
+		访客数:<span id="busuanzi_value_site_uv"></span>
+		</span>
+		<span id="busuanzi_container_site_pv">
+			&nbsp;&nbsp;总访问量:<span id="busuanzi_value_site_pv"></span>
+		</span>
+	</div>
+</footer>
+
+</section>
+
+	<script src="//cdnjs.loli.net/ajax/libs/instantclick/3.0.1/instantclick.min.js" data-no-instant></script>
+	<script data-no-instant>
+		
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+			ga('create', 'UA-XXXXXXXX-Y', 'auto');
+			ga('send', 'pageview');
+  			InstantClick.on('change', function() {
+  				ga('send', 'pageview', location.pathname + location.search);
+			});
+		
+		InstantClick.init('mousedown');
+	</script>
+
+
+

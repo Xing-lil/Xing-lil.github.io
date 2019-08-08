@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+
+  <meta name="description" content="You Are The JavaScript In My HTML">
+
+
+<link rel="alternate" href="/atom.xml" title="Xing&#39;s Blog" type="application/atom+xml">
+<meta name="theme-color" content="#5badf0">
+<title>Android开发-调用讯飞语音SDK - Xing&#39;s Blog</title>
+<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+<link rel="shortcut icon" href="/favicon.png">
+<link rel="stylesheet" href="/css/style.css">
+
+<nav class="main-nav">
+	
+	    <a href="/"> Home</a>
+	
+	
+	    <a href="/about/">About</a>
+	
+	    <a href="/archives/">Archives</a>
+	
+	<!-- <a class="cta" href="/atom.xml" data-no-instant>Subscribe</a> -->
+</nav>
+
+<section id="wrapper">
+    <article class="post">
+    <header>
+        
+            <h1>Android开发-调用讯飞语音SDK</h1>
+        
+        <h2 class="headline">Jul 19 2019
+        
+        </h2>
+    </header>
+</article>
+<section id="post-body"><h2 id="Android平台上借助讯飞语音实现语音输入和输出功能"><a href="#Android平台上借助讯飞语音实现语音输入和输出功能" class="headerlink" title="Android平台上借助讯飞语音实现语音输入和输出功能"></a>Android平台上借助讯飞语音实现语音输入和输出功能</h2><br>
+
+<br>
+
+<h1 id="一、创建讯飞开发者平台应用"><a href="#一、创建讯飞开发者平台应用" class="headerlink" title="一、创建讯飞开发者平台应用"></a>一、创建讯飞开发者平台应用</h1><p>访问<a href="http://www.xfyun.cn/" target="_blank" rel="noopener">讯飞开发平台</a>先注册成为开发者，然后在我的应用中根据自己的需求新建一个应用</p>
+<p><img src="Android%E5%BC%80%E5%8F%91-%E8%B0%83%E7%94%A8%E8%AE%AF%E9%A3%9E%E8%AF%AD%E9%9F%B3SDK/1.png" alt="1"></p>
+<h1 id="二、下载SDK"><a href="#二、下载SDK" class="headerlink" title="二、下载SDK"></a>二、下载SDK</h1><p>创建完成可以得到自己的APPID如图，添加需要的服务（一般只得到在线语音合成），然后下载SDK即可。</p>
+<p><img src="Android%E5%BC%80%E5%8F%91-%E8%B0%83%E7%94%A8%E8%AE%AF%E9%A3%9E%E8%AF%AD%E9%9F%B3SDK/2.png" alt="2"></p>
+<h1 id="三、将SDK导入项目"><a href="#三、将SDK导入项目" class="headerlink" title="三、将SDK导入项目"></a>三、将SDK导入项目</h1><p>解压后的目录结构如下</p>
+<p><img src="Android%E5%BC%80%E5%8F%91-%E8%B0%83%E7%94%A8%E8%AE%AF%E9%A3%9E%E8%AF%AD%E9%9F%B3SDK/3.png" alt="3"></p>
+<p>1.将SDK中lib下的jar文件全部导入到项目的lib中（导入后记得Sync同步一下）</p>
+<p>2.将SDK中lib下除了jar文件导入项目的main目录下的jniLibs文件夹中（若无该文件夹自己创建一个同名的即可）</p>
+<p>3.将SDK中assets文件中的内容同样导入项目main目录下的assets文件夹中。</p>
+<p>最后项目结构如下：</p>
+<p><img src="Android%E5%BC%80%E5%8F%91-%E8%B0%83%E7%94%A8%E8%AE%AF%E9%A3%9E%E8%AF%AD%E9%9F%B3SDK/4.png" alt="4"></p>
+<h1 id="四、添加授权"><a href="#四、添加授权" class="headerlink" title="四、添加授权"></a>四、添加授权</h1><p>在AndroidManif.xml中添加授权如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 读取手机设置 --&gt;</span><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.READ_PHONE_STATE"</span> /&gt;</span><span class="comment">&lt;!-- 查看网络状态 --&gt;</span><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.ACCESS_NETWORK_STATE"</span> /&gt;</span><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.ACCESS_WIFI_STATE"</span> /&gt;</span><span class="comment">&lt;!-- WLAN --&gt;</span><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.ACCESS_WIFI_STATE"</span> /&gt;</span><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.CHANGE_WIFI_STATE"</span> /&gt;</span><span class="comment">&lt;!-- 上网 --&gt;</span><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.INTERNET"</span> /&gt;</span><span class="comment">&lt;!-- 定位 --&gt;</span><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.ACCESS_FINE_LOCATION"</span> /&gt;</span><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.ACCESS_COARSE_LOCATION"</span> /&gt;</span><span class="comment">&lt;!-- 录像/录音 --&gt;</span><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.RECORD_VIDEO"</span> /&gt;</span><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.RECORD_AUDIO"</span> /&gt;</span><span class="comment">&lt;!-- SD卡 --&gt;</span><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.WRITE_EXTERNAL_STORAGE"</span> /&gt;</span><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.READ_EXTERNAL_STORAGE"</span> /&gt;</span><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.MOUNT_UNMOUNT_FILESYSTEMS"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="五、实现语音输出"><a href="#五、实现语音输出" class="headerlink" title="五、实现语音输出"></a>五、实现语音输出</h1><p>自定义实现一个语音输出函数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">speechOutput</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//1. 创建 SpeechSynthesizer 对象 , 第二个参数： 本地合成时传 InitListener</span></span><br><span class="line">    SpeechSynthesizer mTts = SpeechSynthesizer.createSynthesizer(<span class="keyword">this</span>, <span class="keyword">null</span>);</span><br><span class="line">    <span class="comment">//2.合成参数设置</span></span><br><span class="line">    mTts.setParameter(SpeechConstant.VOICE_NAME, <span class="string">"vixyun"</span>); <span class="comment">// 设置发音人</span></span><br><span class="line">    mTts.setParameter(SpeechConstant.SPEED, <span class="string">"50"</span>);<span class="comment">// 设置语速</span></span><br><span class="line">    mTts.setParameter(SpeechConstant.VOLUME, <span class="string">"80"</span>);<span class="comment">// 设置音量，范围 0~100</span></span><br><span class="line">    mTts.setParameter(SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_CLOUD); <span class="comment">//设置云</span></span><br><span class="line">    <span class="comment">//设置合成音频保存位置（可自定义保存位置），保存在 “./sdcard/iflytek.pcm”</span></span><br><span class="line">    <span class="comment">//保存在 SD 卡需要在 AndroidManifest.xml 添加写 SD 卡权限</span></span><br><span class="line">    <span class="comment">//仅支持保存为 pcm 和 wav 格式， 如果不需要保存合成音频，注释该行代码</span></span><br><span class="line">    mTts.setParameter(SpeechConstant.TTS_AUDIO_PATH, <span class="string">"./sdcard/iflytek.pcm"</span>);</span><br><span class="line">    <span class="comment">//3.开始合成</span></span><br><span class="line">    mTts.startSpeaking(editText.getText().toString(), <span class="keyword">new</span> MySynthesizerListener());</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="六、实现语音输入"><a href="#六、实现语音输入" class="headerlink" title="六、实现语音输入"></a>六、实现语音输入</h1><p>自定义实现一个语音输入函数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">speechInput</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//1. 创建RecognizerDialog对象</span></span><br><span class="line">    RecognizerDialog mDialog = <span class="keyword">new</span> RecognizerDialog(<span class="keyword">this</span>, <span class="keyword">new</span> MyInitListener());</span><br><span class="line">    <span class="comment">//2. 设置accent、 language等参数</span></span><br><span class="line">    mDialog.setParameter(SpeechConstant.LANGUAGE, <span class="string">"zh_cn"</span>);<span class="comment">// 设置中文</span></span><br><span class="line">    mDialog.setParameter(SpeechConstant.ACCENT, <span class="string">"mandarin"</span>);</span><br><span class="line">    <span class="comment">// 若要将UI控件用于语义理解，必须添加以下参数设置，设置之后 onResult回调返回将是语义理解</span></span><br><span class="line">    <span class="comment">// 结果</span></span><br><span class="line">    <span class="comment">// mDialog.setParameter("asr_sch", "1");</span></span><br><span class="line">    <span class="comment">// mDialog.setParameter("nlp_version", "2.0");</span></span><br><span class="line">    <span class="comment">//3.设置回调接口</span></span><br><span class="line">    mDialog.setListener(<span class="keyword">new</span> MyRecognizerDialogListener());</span><br><span class="line">    <span class="comment">//4. 显示dialog，接收语音输入</span></span><br><span class="line">    mDialog.show();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="七、源码"><a href="#七、源码" class="headerlink" title="七、源码"></a>七、源码</h1><p>​            <br><a href="git@github.com:Xing-lil/xf.git">项目下载地址GitHub</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.njust.xf;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> androidx.appcompat.app.AppCompatActivity;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.view.View;</span><br><span class="line"><span class="keyword">import</span> android.widget.EditText;</span><br><span class="line"><span class="keyword">import</span> android.widget.Toast;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.iflytek.cloud.ErrorCode;</span><br><span class="line"><span class="keyword">import</span> com.iflytek.cloud.InitListener;</span><br><span class="line"><span class="keyword">import</span> com.iflytek.cloud.RecognizerResult;</span><br><span class="line"><span class="keyword">import</span> com.iflytek.cloud.SpeechConstant;</span><br><span class="line"><span class="keyword">import</span> com.iflytek.cloud.SpeechError;</span><br><span class="line"><span class="keyword">import</span> com.iflytek.cloud.SpeechSynthesizer;</span><br><span class="line"><span class="keyword">import</span> com.iflytek.cloud.SpeechUtility;</span><br><span class="line"><span class="keyword">import</span> com.iflytek.cloud.SynthesizerListener;</span><br><span class="line"><span class="keyword">import</span> com.iflytek.cloud.ui.RecognizerDialog;</span><br><span class="line"><span class="keyword">import</span> com.iflytek.cloud.ui.RecognizerDialogListener;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.json.JSONException;</span><br><span class="line"><span class="keyword">import</span> org.json.JSONObject;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.LinkedHashMap;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> <span class="keyword">implements</span> <span class="title">View</span>.<span class="title">OnClickListener</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = MainActivity.class.getSimpleName();</span><br><span class="line">    <span class="keyword">private</span> EditText editText;</span><br><span class="line">    <span class="keyword">private</span> HashMap&lt;String, String&gt; mIatResults = <span class="keyword">new</span> LinkedHashMap&lt;String, String&gt;();  <span class="comment">// 用HashMap存储听写结果</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        initView();</span><br><span class="line">        initSpeech();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initView</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        findViewById(R.id.speechOutput).setOnClickListener(<span class="keyword">this</span>);</span><br><span class="line">        findViewById(R.id.speechInput).setOnClickListener(<span class="keyword">this</span>);</span><br><span class="line">        editText = findViewById(R.id.text);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initSpeech</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        SpeechUtility.createUtility(<span class="keyword">this</span>, SpeechConstant.APPID + <span class="string">"=5d197925"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">switch</span> (view.getId()) &#123;</span><br><span class="line">            <span class="keyword">case</span> R.id.speechInput:</span><br><span class="line">                <span class="comment">//语音输入</span></span><br><span class="line">                speechInput();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> R.id.speechOutput:</span><br><span class="line">                <span class="comment">//语音输出</span></span><br><span class="line">                speechOutput();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//语音输出</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">speechOutput</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//1. 创建 SpeechSynthesizer 对象 , 第二个参数： 本地合成时传 InitListener</span></span><br><span class="line">        SpeechSynthesizer mTts = SpeechSynthesizer.createSynthesizer(<span class="keyword">this</span>, <span class="keyword">null</span>);</span><br><span class="line">        <span class="comment">//2.合成参数设置</span></span><br><span class="line">        mTts.setParameter(SpeechConstant.VOICE_NAME, <span class="string">"vixyun"</span>); <span class="comment">// 设置发音人</span></span><br><span class="line">        mTts.setParameter(SpeechConstant.SPEED, <span class="string">"50"</span>);<span class="comment">// 设置语速</span></span><br><span class="line">        mTts.setParameter(SpeechConstant.VOLUME, <span class="string">"80"</span>);<span class="comment">// 设置音量，范围 0~100</span></span><br><span class="line">        mTts.setParameter(SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_CLOUD); <span class="comment">//设置云端</span></span><br><span class="line">        <span class="comment">//设置合成音频保存位置（可自定义保存位置），保存在 “./sdcard/iflytek.pcm”</span></span><br><span class="line">        <span class="comment">//保存在 SD 卡需要在 AndroidManifest.xml 添加写 SD 卡权限</span></span><br><span class="line">        <span class="comment">//仅支持保存为 pcm 和 wav 格式， 如果不需要保存合成音频，注释该行代码</span></span><br><span class="line">        mTts.setParameter(SpeechConstant.TTS_AUDIO_PATH, <span class="string">"./sdcard/iflytek.pcm"</span>);</span><br><span class="line">        <span class="comment">//3.开始合成</span></span><br><span class="line">        mTts.startSpeaking(editText.getText().toString(), <span class="keyword">new</span> MySynthesizerListener());</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">MySynthesizerListener</span> <span class="keyword">implements</span> <span class="title">SynthesizerListener</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSpeakBegin</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            showTip(<span class="string">" 开始播放 "</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSpeakPaused</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            showTip(<span class="string">" 暂停播放 "</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSpeakResumed</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            showTip(<span class="string">" 继续播放 "</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onBufferProgress</span><span class="params">(<span class="keyword">int</span> percent, <span class="keyword">int</span> beginPos, <span class="keyword">int</span> endPos,</span></span></span><br><span class="line"><span class="function"><span class="params">                                     String info)</span> </span>&#123;</span><br><span class="line">            <span class="comment">// 合成进度</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSpeakProgress</span><span class="params">(<span class="keyword">int</span> percent, <span class="keyword">int</span> beginPos, <span class="keyword">int</span> endPos)</span> </span>&#123;</span><br><span class="line">            <span class="comment">// 播放进度</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCompleted</span><span class="params">(SpeechError error)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (error == <span class="keyword">null</span>) &#123;</span><br><span class="line">                showTip(<span class="string">"播放完成 "</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (error != <span class="keyword">null</span>) &#123;</span><br><span class="line">				showTip(error.getPlainDescription(<span class="keyword">true</span>));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onEvent</span><span class="params">(<span class="keyword">int</span> eventType, <span class="keyword">int</span> arg1, <span class="keyword">int</span> arg2, Bundle obj)</span> </span>&#123;</span><br><span class="line">            <span class="comment">// 以下代码用于获取与云端的会话 id，当业务出错时将会话 id提供给技术支持人员，可用于查询会话日志，定位出错原因</span></span><br><span class="line">            <span class="comment">// 若使用本地能力，会话 id为null</span></span><br><span class="line">            <span class="comment">//if (SpeechEvent.EVENT_SESSION_ID == eventType) &#123;</span></span><br><span class="line">            <span class="comment">//     String sid = obj.getString(SpeechEvent.KEY_EVENT_SESSION_ID);</span></span><br><span class="line">            <span class="comment">//     Log.d(TAG, "session id =" + sid);</span></span><br><span class="line">            <span class="comment">//&#125;</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//语音输入</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">speechInput</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//1. 创建RecognizerDialog对象</span></span><br><span class="line">        RecognizerDialog mDialog = <span class="keyword">new</span> RecognizerDialog(<span class="keyword">this</span>, <span class="keyword">new</span> MyInitListener());</span><br><span class="line">        <span class="comment">//2. 设置accent、 language等参数</span></span><br><span class="line">        mDialog.setParameter(SpeechConstant.LANGUAGE, <span class="string">"zh_cn"</span>);<span class="comment">// 设置中文</span></span><br><span class="line">        mDialog.setParameter(SpeechConstant.ACCENT, <span class="string">"mandarin"</span>);</span><br><span class="line">        <span class="comment">// 若要将UI控件用于语义理解，必须添加以下参数设置，设置之后 onResult回调返回将是语义理解</span></span><br><span class="line">        <span class="comment">// 结果</span></span><br><span class="line">        <span class="comment">// mDialog.setParameter("asr_sch", "1");</span></span><br><span class="line">        <span class="comment">// mDialog.setParameter("nlp_version", "2.0");</span></span><br><span class="line">        <span class="comment">//3.设置回调接口</span></span><br><span class="line">        mDialog.setListener(<span class="keyword">new</span> MyRecognizerDialogListener());</span><br><span class="line">        <span class="comment">//4. 显示dialog，接收语音输入</span></span><br><span class="line">        mDialog.show();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">MyInitListener</span> <span class="keyword">implements</span> <span class="title">InitListener</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onInit</span><span class="params">(<span class="keyword">int</span> code)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (code != ErrorCode.SUCCESS) &#123;</span><br><span class="line">                showTip(<span class="string">"初始化失败 "</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">MyRecognizerDialogListener</span> <span class="keyword">implements</span> <span class="title">RecognizerDialogListener</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onResult</span><span class="params">(RecognizerResult results, <span class="keyword">boolean</span> isLast)</span> </span>&#123;</span><br><span class="line">            String result = results.getResultString(); <span class="comment">//为解析的</span></span><br><span class="line">            String text = JsonParser.parseIatResult(result);<span class="comment">//解析过后的</span></span><br><span class="line">            String sn = <span class="keyword">null</span>;</span><br><span class="line">            <span class="comment">// 读取json结果中的 sn字段</span></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                JSONObject resultJson = <span class="keyword">new</span> JSONObject(results.getResultString());</span><br><span class="line">                sn = resultJson.optString(<span class="string">"sn"</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (JSONException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            mIatResults.put(sn, text);<span class="comment">//没有得到一句，添加到</span></span><br><span class="line"></span><br><span class="line">            StringBuffer resultBuffer = <span class="keyword">new</span> StringBuffer();</span><br><span class="line">            <span class="keyword">for</span> (String key : mIatResults.keySet()) &#123;</span><br><span class="line">                resultBuffer.append(mIatResults.get(key));</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            editText.setText(resultBuffer.toString());<span class="comment">// 设置输入框的文本</span></span><br><span class="line">            editText.setSelection(editText.length());<span class="comment">//把光标定位末尾</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(SpeechError speechError)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">showTip</span><span class="params">(String data)</span> </span>&#123;</span><br><span class="line">        Toast.makeText(<span class="keyword">this</span>, data, Toast.LENGTH_SHORT).show();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</section>
+    
+
+    <footer id="post-meta" class="clearfix">
+        <a href="/">
+        <img class="avatar" src="/images/avatar.png">
+        <div>
+            <span class="dark">Xing&#39;s Blog</span>
+            <span>You Are The JavaScript In My HTML</span>
+        </div>
+        </a>
+        <section id="sharing">
+            <a title="Share to Twitter" class="twitter" href="https://github.com/"><span class="icon-twitter">GitHub</span></a>
+            <a title="Share to Facebook" class="facebook" href="https://www.zhihu.com/"><span class="icon-facebook-sign">ZhiHu</span>
+            </a>
+        </section>
+    </footer>
+
+<!-- 
+  <section id="comment">
+    <button class="btn" id="loadcmts" onclick="cmts.load();">Load Comments</button>
+    <div id="gitment"></div>
+    <script src='/js/gitment.browser.js'></script>
+    <link rel="stylesheet" href=''>
+    <script>
+      var cmts={
+        load:function cmts(){
+          var gitment = new Gitment({
+          
+            id: "Android开发-调用讯飞语音SDK",
+          
+            owner: "",
+            repo: "",
+            oauth: {
+              client_id: "",
+              client_secret: "",
+            },
+          })
+          gitment.render('gitment');
+          var loadcmt = document.getElementById("loadcmts");
+          var imyourfather = loadcmt.parentNode;
+          imyourfather.removeChild(loadcmts)
+        }
+      }
+    </script>
+  </section>
+ -->
+
+<!-- 阅读更多 -->
+<!-- 
+    
+        <ul id="post-list" class="archive readmore">
+        <h3>Read more</h3>
+        
+            <li>
+    <aside class="dates">Aug 09 2019</aside>
+    <a href="/2019/08/09/hello-world/">Hello World</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 22 2019</aside>
+    <a href="/2019/07/22/Android开发-利用OkHTTP与服务器通信/">Android开发-利用OkHTTP与服务器通信</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 19 2019</aside>
+    <a href="/2019/07/19/Android开发-调用讯飞语音SDK/">Android开发-调用讯飞语音SDK</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 16 2019</aside>
+    <a href="/2019/07/16/Android开发-百度地图SDK的配置与使用/">Android开发-百度地图SDK的配置与使用</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 09 2019</aside>
+    <a href="/2019/07/09/Android开发-不同Activity之间的跳转/">Android开发-不同Activity之间的跳转</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 07 2019</aside>
+    <a href="/2019/07/07/JavaScript-学习笔记/">JavaScript-学习笔记</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 07 2019</aside>
+    <a href="/2019/07/07/OJ-Counting-Cliques/">OJ-Counting Cliques</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 06 2019</aside>
+    <a href="/2019/07/06/Android开发-上传和更新项目到GitHub/">Android开发-上传和更新项目到GitHub</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 04 2019</aside>
+    <a href="/2019/07/04/Android开发-蓝牙RSSI定位/">Android开发-蓝牙RSSI定位</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 02 2019</aside>
+    <a href="/2019/07/02/Android开发-蓝牙模块/">Android开发-蓝牙模块</a>
+    <h2></h2>
+</li>
+        
+        </ul>
+    
+ -->
+	<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<footer id="footer">
+	<div id="social">
+		<p class="small">© Copyright 2019
+			<a href="/"> lil-Xing </a>
+		</p>
+	</div>
+	<div class="powered-by" style="text-align: center;color: #bbb;">
+		<span id="busuanzi_container_site_uv">
+		访客数:<span id="busuanzi_value_site_uv"></span>
+		</span>
+		<span id="busuanzi_container_site_pv">
+			&nbsp;&nbsp;总访问量:<span id="busuanzi_value_site_pv"></span>
+		</span>
+	</div>
+</footer>
+
+</section>
+
+	<script src="//cdnjs.loli.net/ajax/libs/instantclick/3.0.1/instantclick.min.js" data-no-instant></script>
+	<script data-no-instant>
+		
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+			ga('create', 'UA-XXXXXXXX-Y', 'auto');
+			ga('send', 'pageview');
+  			InstantClick.on('change', function() {
+  				ga('send', 'pageview', location.pathname + location.search);
+			});
+		
+		InstantClick.init('mousedown');
+	</script>
+
+
+

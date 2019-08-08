@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+
+  <meta name="description" content="You Are The JavaScript In My HTML">
+
+
+<link rel="alternate" href="/atom.xml" title="Xing&#39;s Blog" type="application/atom+xml">
+<meta name="theme-color" content="#5badf0">
+<title>JavaScript-学习笔记 - Xing&#39;s Blog</title>
+<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+<link rel="shortcut icon" href="/favicon.png">
+<link rel="stylesheet" href="/css/style.css">
+
+<nav class="main-nav">
+	
+	    <a href="/"> Home</a>
+	
+	
+	    <a href="/about/">About</a>
+	
+	    <a href="/archives/">Archives</a>
+	
+	<!-- <a class="cta" href="/atom.xml" data-no-instant>Subscribe</a> -->
+</nav>
+
+<section id="wrapper">
+    <article class="post">
+    <header>
+        
+            <h1>JavaScript-学习笔记</h1>
+        
+        <h2 class="headline">Jul 07 2019
+        
+        </h2>
+    </header>
+</article>
+<section id="post-body"><h2 id="记录一些JavaScript的学习笔记-转载自Guofoo’s-blog"><a href="#记录一些JavaScript的学习笔记-转载自Guofoo’s-blog" class="headerlink" title="记录一些JavaScript的学习笔记,转载自Guofoo’s blog"></a>记录一些JavaScript的学习笔记,转载自<a href="[https://lgfwannabetter.github.io/2019/07/07/js%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/#more](https://lgfwannabetter.github.io/2019/07/07/js学习笔记/#more)">Guofoo’s blog</a></h2><br>
+
+<br>
+
+<h1 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h1><h4 id="声明"><a href="#声明" class="headerlink" title="声明"></a>声明</h4><p>JavaScript是弱类型语言，当声明新变量时，可以使用 “new” 来声明其类型（首字母大写）：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> carname = <span class="keyword">new</span> <span class="built_in">String</span>;  <span class="comment">//字符串</span></span><br><span class="line"><span class="keyword">var</span> x = <span class="keyword">new</span> <span class="built_in">Number</span>;        <span class="comment">//数字  </span></span><br><span class="line"><span class="keyword">var</span> y = <span class="keyword">new</span> <span class="built_in">Boolean</span>;       <span class="comment">//布尔</span></span><br><span class="line"><span class="keyword">var</span> cars = <span class="keyword">new</span> <span class="built_in">Array</span>;      <span class="comment">//数组</span></span><br><span class="line"><span class="keyword">var</span> person = <span class="keyword">new</span> <span class="built_in">Object</span>;   <span class="comment">//对象</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="赋值"><a href="#赋值" class="headerlink" title="赋值"></a>赋值</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x,y,z=<span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>x, y 为 <strong>undefined</strong>， z 为 。</p>
+<h4 id="重新声明"><a href="#重新声明" class="headerlink" title="重新声明"></a>重新声明</h4><p>如果重新声明 JavaScript 变量，该变量的值不会丢失：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> carname=<span class="string">"Volvo"</span>; </span><br><span class="line"><span class="keyword">var</span> carname;</span><br></pre></td></tr></table></figure>
+
+<p>两条语句执行后，变量 carname 的值依然是 “Volvo”。</p>
+<h4 id="生存期"><a href="#生存期" class="headerlink" title="生存期"></a>生存期</h4><p>局部变量（函数内的变量，只能在函数内部访问它）会在函数运行以后被删除。</p>
+<p>全局变量（函数外的变量，网页上的所有脚本和函数都能访问它）会在页面关闭后被删除。</p>
+<h4 id="向未声明的-JavaScript-变量分配值"><a href="#向未声明的-JavaScript-变量分配值" class="headerlink" title="向未声明的 JavaScript 变量分配值"></a>向未声明的 JavaScript 变量分配值</h4><p>如果您把值赋给尚未声明的变量，该变量将被自动作为 window 的一个属性。</p>
+<p>这条语句：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">carname=<span class="string">"Volvo"</span>;</span><br></pre></td></tr></table></figure>
+
+<p>将声明 window 的一个属性 carname。</p>
+<p>非严格模式下给未声明变量赋值创建的全局变量，是全局对象的可配置属性，可以删除。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> var1 = <span class="number">1</span>; <span class="comment">// 不可配置全局属性</span></span><br><span class="line">var2 = <span class="number">2</span>; <span class="comment">// 没有使用 var 声明，可配置全局属性</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">this</span>.var1); <span class="comment">// 1</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">window</span>.var1); <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">delete</span> var1; <span class="comment">// false 无法删除</span></span><br><span class="line"><span class="built_in">console</span>.log(var1); <span class="comment">//1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">delete</span> var2; </span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">delete</span> var2); <span class="comment">// true</span></span><br><span class="line"><span class="built_in">console</span>.log(var2); <span class="comment">// 已经删除 报错变量未定义</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h1><h4 id="创建名为-cars-的数组："><a href="#创建名为-cars-的数组：" class="headerlink" title="创建名为 cars 的数组："></a>创建名为 cars 的数组：</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> cars=<span class="keyword">new</span> <span class="built_in">Array</span>();</span><br><span class="line">cars[<span class="number">0</span>]=<span class="string">"Saab"</span>;</span><br><span class="line">cars[<span class="number">1</span>]=<span class="string">"Volvo"</span>;</span><br><span class="line">cars[<span class="number">2</span>]=<span class="string">"BMW"</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="或者-condensed-array，压缩数组"><a href="#或者-condensed-array，压缩数组" class="headerlink" title="或者 (condensed array，压缩数组):"></a>或者 (condensed array，压缩数组):</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> cars=<span class="keyword">new</span> <span class="built_in">Array</span>(<span class="string">"Saab"</span>,<span class="string">"Volvo"</span>,<span class="string">"BMW"</span>);</span><br></pre></td></tr></table></figure>
+
+<h4 id="或者-literal-array，文本数组"><a href="#或者-literal-array，文本数组" class="headerlink" title="或者 (literal array，文本数组):"></a>或者 (literal array，文本数组):</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> cars=[<span class="string">"Saab"</span>,<span class="string">"Volvo"</span>,<span class="string">"BMW"</span>];</span><br></pre></td></tr></table></figure>
+
+<h1 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h1><p>对象由花括号分隔。对象的属性以 name : value 的形式来定义。属性由逗号分隔：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person=&#123;</span><br><span class="line">	firstname : <span class="string">"John"</span>,      <span class="comment">//在对象中写属性</span></span><br><span class="line">	lastname : <span class="string">"Doe"</span>,</span><br><span class="line">	id : <span class="number">5566</span>,</span><br><span class="line">	fullName : <span class="function"><span class="keyword">function</span>(<span class="params"></span>)    //在对象中写方法</span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">this</span>.firstName + <span class="string">" "</span> + <span class="keyword">this</span>.lastName;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>对象属性有两种寻址方式：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">name = person.lastname;</span><br><span class="line">name = person[<span class="string">"lastname"</span>];</span><br></pre></td></tr></table></figure>
+
+<p>调用对象的方法：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">name = person.fullName();   </span><br><span class="line"><span class="comment">//执行函数，返回：John Doe</span></span><br><span class="line"></span><br><span class="line">name = person.fullName;     </span><br><span class="line"><span class="comment">//返回：function() &#123; return this.firstName + " " + this.lastName; &#125;</span></span><br><span class="line"><span class="comment">//调用方法时，不加括号，返回的是函数代码（相当于把方法看成属性了）</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="undefined-、null、typeof"><a href="#undefined-、null、typeof" class="headerlink" title="undefined 、null、typeof"></a>undefined 、null、typeof</h1><p>undefined ：</p>
+<p> 表示变量不含有值。</p>
+<p> 是所有没有赋值变量的默认值，自动赋值。</p>
+<p>null：</p>
+<p> 可以将变量的值设置为 null 来清空变量。</p>
+<p> 主动释放一个变量引用的对象，表示一个变量不再指向任何对象地址。</p>
+<p>可以使用 typeof 操作符来检测变量的数据类型。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//null 和 undefined 的值相等，但类型不等：</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typeof</span> <span class="literal">undefined</span>             <span class="comment">// undefined</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="literal">null</span>                  <span class="comment">// object</span></span><br><span class="line"><span class="literal">null</span> === <span class="literal">undefined</span>           <span class="comment">// false</span></span><br><span class="line"><span class="literal">null</span> == <span class="literal">undefined</span>            <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h1><h4 id="函数变量"><a href="#函数变量" class="headerlink" title="函数变量"></a>函数变量</h4><p>变量在函数内没有声明（没有使用 var 关键字），该变量为全局变量。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 此处可调用 carName 变量   </span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myFunction</span>(<span class="params"></span>) </span>&#123;     </span><br><span class="line">    carName = <span class="string">"Volvo"</span>;     </span><br><span class="line">    <span class="comment">// 此处可调用 carName 变量 </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>该例中， carName 在函数内，但是为全局变量。</p>
+<h4 id="匿名函数"><a href="#匿名函数" class="headerlink" title="匿名函数"></a>匿名函数</h4><p>函数存储在变量中，不需要函数名称，通常通过变量名来调用。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="function"><span class="keyword">function</span> (<span class="params">a, b</span>) </span>&#123;<span class="keyword">return</span> a * b&#125;;</span><br><span class="line"><span class="keyword">var</span> z = x(<span class="number">4</span>, <span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+
+<h4 id="JavaScript-闭包"><a href="#JavaScript-闭包" class="headerlink" title="JavaScript 闭包"></a>JavaScript 闭包</h4><p><strong>实例</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> add = (<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;     </span><br><span class="line">    <span class="keyword">var</span> counter = <span class="number">0</span>;     </span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;<span class="keyword">return</span> counter += <span class="number">1</span>;&#125; </span><br><span class="line">&#125;)();   </span><br><span class="line">add(); </span><br><span class="line">add(); </span><br><span class="line">add();   <span class="comment">// 计数器为 3</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>实例解析</strong></p>
+<p>变量 add 指定了函数自我调用的返回字值。</p>
+<p>自我调用函数只执行一次。设置计数器为 0。并返回函数表达式。</p>
+<p>add变量可以作为一个函数使用。非常棒的部分是它可以访问函数上一层作用域的计数器。</p>
+<p>这个叫作 JavaScript 闭包。它使得函数拥有私有变量变成可能。</p>
+<p>计数器受匿名函数的作用域保护，只能通过 add 方法修改。函数是对象</p>
+<p>在 JavaScript 中使用 typeof 操作符判断函数类型将返回 “function”</p>
+<p>闭包是一种保护私有变量的机制，在函数执行时形成私有的作用域，保护里面的私有变量不受外界干扰。直观的说就是形成一个不销毁的栈环境。</p>
+<h4 id="箭头函数"><a href="#箭头函数" class="headerlink" title="箭头函数"></a>箭头函数</h4><p>ES6 新增了箭头函数。箭头函数的语法比普通函数更简洁。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(参数<span class="number">1</span>, 参数<span class="number">2</span>, …, 参数N) =&gt; &#123; 函数声明 &#125;</span><br><span class="line"></span><br><span class="line">(参数<span class="number">1</span>, 参数<span class="number">2</span>, …, 参数N) =&gt; 表达式(单一)</span><br><span class="line"><span class="comment">// 相当于：(参数1, 参数2, …, 参数N) =&gt;&#123; return 表达式; &#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>当只有一个参数时，圆括号是可选的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(单一参数) =&gt; &#123;函数声明&#125;单一参数 =&gt; &#123;函数声明&#125;</span><br></pre></td></tr></table></figure>
+
+<p>没有参数的函数应该写成一对圆括号:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">() =&gt; &#123;函数声明&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例：</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ES5 </span></span><br><span class="line"><span class="keyword">var</span> x = <span class="function"><span class="keyword">function</span>(<span class="params">x, y</span>) </span>&#123;      </span><br><span class="line">    <span class="keyword">return</span> x * y; </span><br><span class="line">&#125;   </span><br><span class="line"><span class="comment">// ES6 </span></span><br><span class="line"><span class="keyword">const</span> x = <span class="function">(<span class="params">x, y</span>) =&gt;</span> x * y;</span><br></pre></td></tr></table></figure>
+
+<h4 id="参数规则"><a href="#参数规则" class="headerlink" title="参数规则"></a>参数规则</h4><p>显式参数（形参）、隐式参数（实参）</p>
+<p>JavaScript 函数定义显式参数时没有指定数据类型。</p>
+<p>JavaScript 函数对隐式参数没有进行类型检测。</p>
+<p>JavaScript 函数对隐式参数的个数没有进行检测。</p>
+<h1 id="let关键字"><a href="#let关键字" class="headerlink" title="let关键字"></a>let关键字</h1><p>let 声明的变量只在其声明的块或子块中可用，这一点，与 var 相似。二者之间最主要的区别在于 var 声明的变量的作用域是整个封闭函数。</p>
+<p>let 和 var 的区别代码实例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">varTest</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> x = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> x = <span class="number">2</span>;  <span class="comment">// 同样的变量!</span></span><br><span class="line">    <span class="built_in">console</span>.log(x);  <span class="comment">// 2</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">console</span>.log(x);  <span class="comment">// 2</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">letTest</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> x = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> x = <span class="number">2</span>;  <span class="comment">// 不同的变量</span></span><br><span class="line">    <span class="built_in">console</span>.log(x);  <span class="comment">// 2</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">console</span>.log(x);  <span class="comment">// 1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在相同的作用域或块级作用域中，不能使用 <strong>let</strong> 关键字来重置 <strong>var</strong> 关键字声明的变量:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">2</span>;       <span class="comment">// 合法</span></span><br><span class="line"><span class="keyword">let</span> x = <span class="number">3</span>;       <span class="comment">// 不合法</span></span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> x = <span class="number">4</span>;   <span class="comment">// 合法</span></span><br><span class="line">    <span class="keyword">let</span> x = <span class="number">5</span>   <span class="comment">// 不合法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="const关键字"><a href="#const关键字" class="headerlink" title="const关键字"></a>const关键字</h1><p>使用 const 声明的是常量，其值一旦被设定便不可被更改。</p>
+<h1 id="常见的HTML事件"><a href="#常见的HTML事件" class="headerlink" title="常见的HTML事件"></a>常见的HTML事件</h1><p>下面是一些常见的HTML事件的列表:</p>
+<table>
+<thead>
+<tr>
+<th align="left">事件</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">onchange</td>
+<td align="left">HTML 元素改变</td>
+</tr>
+<tr>
+<td align="left">onclick</td>
+<td align="left">用户点击 HTML 元素</td>
+</tr>
+<tr>
+<td align="left">onmouseover</td>
+<td align="left">用户在一个HTML元素上移动鼠标</td>
+</tr>
+<tr>
+<td align="left">onmouseout</td>
+<td align="left">用户从一个HTML元素上移开鼠标</td>
+</tr>
+<tr>
+<td align="left">onkeydown</td>
+<td align="left">用户按下键盘按键</td>
+</tr>
+<tr>
+<td align="left">onload</td>
+<td align="left">浏览器已完成页面的加载</td>
+</tr>
+</tbody></table>
+<h1 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h1><h4 id="字符串可以是对象"><a href="#字符串可以是对象" class="headerlink" title="字符串可以是对象"></a>字符串可以是对象</h4><p>通常， JavaScript 字符串是原始值，可以使用字符创建：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="string">"John"</span></span><br></pre></td></tr></table></figure>
+
+<p>但我们也可以使用 new 关键字将字符串定义为一个对象：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> y = <span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">"John"</span>)</span><br><span class="line"><span class="keyword">typeof</span> x <span class="comment">// 返回 String</span></span><br><span class="line"><span class="keyword">typeof</span> y <span class="comment">// 返回 Object</span></span><br></pre></td></tr></table></figure>
+
+<p>建议：不要创建 String 对象。它会拖慢执行速度，并可能产生其他副作用：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="string">"John"</span>;              </span><br><span class="line"><span class="keyword">var</span> y = <span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">"John"</span>);</span><br><span class="line"></span><br><span class="line">(x === y) </span><br><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment">	结果为 false，因为 x 是字符串，y 是对象</span></span><br><span class="line"><span class="comment">	=== 为绝对相等，即数据类型与值都必须相等。</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<p>关于更多字符串对象，请访问<a href="https://www.runoob.com/jsref/jsref-obj-string.html" target="_blank" rel="noopener">菜鸟String对象</a></p>
+<h3 id="For-In-循环"><a href="#For-In-循环" class="headerlink" title="For/In 循环"></a>For/In 循环</h3><p>for/in 语句循环遍历对象的属性：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person=&#123;<span class="attr">fname</span>:<span class="string">"John"</span>,<span class="attr">lname</span>:<span class="string">"Doe"</span>,<span class="attr">age</span>:<span class="number">25</span>&#125;;    </span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (x <span class="keyword">in</span> person) &#123;      <span class="comment">// x 为属性名   </span></span><br><span class="line">    txt=txt + person[x]; </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//txt最终为：JohnDoe25</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="js数据类型"><a href="#js数据类型" class="headerlink" title="js数据类型"></a>js数据类型</h1><p>在 JavaScript 中有 5 种不同的数据类型：</p>
+<ul>
+<li>string</li>
+<li>number</li>
+<li>boolean</li>
+<li>object</li>
+<li>function</li>
+</ul>
+<p>3 种对象类型：</p>
+<ul>
+<li>Object</li>
+<li>Date</li>
+<li>Array</li>
+</ul>
+<p>2 个不包含任何值的数据类型：</p>
+<ul>
+<li>null</li>
+<li>undefined</li>
+</ul>
+<p><strong>请注意：</strong></p>
+<ul>
+<li>NaN 的数据类型是 number</li>
+<li>数组(Array)的数据类型是 object</li>
+<li>日期(Date)的数据类型为 object</li>
+<li>null 的数据类型是 object</li>
+<li>未定义变量的数据类型为 undefined</li>
+</ul>
+<h4 id="类型转换"><a href="#类型转换" class="headerlink" title="类型转换"></a>类型转换</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">String</span>(x)         <span class="comment">// 将变量 x 转换为字符串并返回</span></span><br><span class="line">x.toString()</span><br><span class="line"></span><br><span class="line"><span class="built_in">Number</span>(<span class="string">"3.14"</span>)    <span class="comment">// 返回 3.14</span></span><br><span class="line"><span class="built_in">Number</span>(<span class="string">" "</span>)       <span class="comment">// 返回 0 </span></span><br><span class="line"><span class="built_in">Number</span>(<span class="string">""</span>)        <span class="comment">// 返回 0</span></span><br><span class="line"><span class="built_in">Number</span>(<span class="string">"99 88"</span>)   <span class="comment">// 返回 NaN</span></span><br><span class="line"></span><br><span class="line"><span class="number">5</span> + <span class="literal">null</span>    <span class="comment">// 返回 5         null 转换为 0</span></span><br><span class="line"><span class="string">"5"</span> + <span class="literal">null</span>  <span class="comment">// 返回"5null"   null 转换为 "null"</span></span><br><span class="line"><span class="string">"5"</span> + <span class="number">1</span>     <span class="comment">// 返回 "51"      1 转换为 "1"  </span></span><br><span class="line"><span class="string">"5"</span> - <span class="number">1</span>     <span class="comment">// 返回 4         "5" 转换为 5</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="提升（hoisting）"><a href="#提升（hoisting）" class="headerlink" title="提升（hoisting）"></a>提升（hoisting）</h1><p>提升（Hoisting）是 JavaScript 默认将当前作用域提升到前面去的行为。提升（Hoisting）应用在变量的声明与函数的声明。</p>
+<h4 id="变量提升"><a href="#变量提升" class="headerlink" title="变量提升"></a>变量提升</h4><p>JavaScript 中，函数及变量的声明总是会被解释器悄悄地被”提升”到函数的最顶部。也就是说，哪怕变量在使用后才声明，也没事（有声明就好~）。</p>
+<p>但</p>
+<p>声明的时候顺便初始化了（如<code>var y = 7;</code>），此时不会被“提升”。</p>
+<h4 id="函数提升"><a href="#函数提升" class="headerlink" title="函数提升"></a>函数提升</h4><p>函数可以在声明之前调用：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">myFunction(<span class="number">5</span>);  <span class="comment">//先调用</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myFunction</span>(<span class="params">y</span>) </span>&#123;  <span class="comment">//再声明</span></span><br><span class="line">    <span class="keyword">return</span> y * y;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用表达式定义函数时无法提升。</p>
+<h1 id="“use-strict”"><a href="#“use-strict”" class="headerlink" title="“use strict”"></a>“use strict”</h1><p>JavaScript 严格模式（strict mode）即在严格的条件下运行。</p>
+<p><strong>实例1</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">"use strict"</span>;</span><br><span class="line">myFunction();</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myFunction</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    y = <span class="number">3.14</span>;   <span class="comment">// 报错 (y 未定义)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例2</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">x = <span class="number">3.14</span>;       <span class="comment">// 不报错 </span></span><br><span class="line">myFunction();</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myFunction</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"><span class="meta">   "use strict"</span>;</span><br><span class="line">    y = <span class="number">3.14</span>;   <span class="comment">// 报错 (y 未定义)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为什么使用严格模式:</p>
+<ul>
+<li>消除Javascript语法的一些不合理、不严谨之处，减少一些怪异行为;</li>
+<li>消除代码运行的一些不安全之处，保证代码运行的安全；</li>
+<li>提高编译器效率，增加运行速度；</li>
+<li>为未来新版本的Javascript做好铺垫。</li>
+</ul>
+<p>“严格模式”体现了Javascript更合理、更安全、更严谨的发展方向，包括IE 10在内的主流浏览器，都已经支持它，许多大项目已经开始全面拥抱它。</p>
+<p>另一方面，同样的代码，在”严格模式”中，可能会有不一样的运行结果；一些在”正常模式”下可以运行的语句，在”严格模式”下将不能运行。掌握这些内容，有助于更细致深入地理解Javascript，让你变成一个更好的程序员。</p>
+<p>更多限制，<a href="https://www.runoob.com/js/js-strict.html" target="_blank" rel="noopener">点击此处</a></p>
+<h1 id="浮点型数据"><a href="#浮点型数据" class="headerlink" title="浮点型数据"></a>浮点型数据</h1><p>JavaScript 中的所有数据都是以 64 位<strong>浮点型数据(float)</strong> 来存储。</p>
+<p>所有的编程语言，包括 JavaScript，对浮点型数据的精确度都很难确定：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">0.1</span>;</span><br><span class="line"><span class="keyword">var</span> y = <span class="number">0.2</span>;</span><br><span class="line"><span class="keyword">var</span> z = x + y            <span class="comment">// z 的结果为 0.3</span></span><br><span class="line"><span class="keyword">if</span> (z == <span class="number">0.3</span>)            <span class="comment">// 返回 false</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="JavaScript-表单"><a href="#JavaScript-表单" class="headerlink" title="JavaScript 表单"></a>JavaScript 表单</h1><p><a href="https://www.runoob.com/js/js-validation.html" target="_blank" rel="noopener">JavaScript 表单</a></p>
+</section>
+    
+
+    <footer id="post-meta" class="clearfix">
+        <a href="/">
+        <img class="avatar" src="/images/avatar.png">
+        <div>
+            <span class="dark">Xing&#39;s Blog</span>
+            <span>You Are The JavaScript In My HTML</span>
+        </div>
+        </a>
+        <section id="sharing">
+            <a title="Share to Twitter" class="twitter" href="https://github.com/"><span class="icon-twitter">GitHub</span></a>
+            <a title="Share to Facebook" class="facebook" href="https://www.zhihu.com/"><span class="icon-facebook-sign">ZhiHu</span>
+            </a>
+        </section>
+    </footer>
+
+<!-- 
+  <section id="comment">
+    <button class="btn" id="loadcmts" onclick="cmts.load();">Load Comments</button>
+    <div id="gitment"></div>
+    <script src='/js/gitment.browser.js'></script>
+    <link rel="stylesheet" href=''>
+    <script>
+      var cmts={
+        load:function cmts(){
+          var gitment = new Gitment({
+          
+            id: "JavaScript-学习笔记",
+          
+            owner: "",
+            repo: "",
+            oauth: {
+              client_id: "",
+              client_secret: "",
+            },
+          })
+          gitment.render('gitment');
+          var loadcmt = document.getElementById("loadcmts");
+          var imyourfather = loadcmt.parentNode;
+          imyourfather.removeChild(loadcmts)
+        }
+      }
+    </script>
+  </section>
+ -->
+
+<!-- 阅读更多 -->
+<!-- 
+    
+        <ul id="post-list" class="archive readmore">
+        <h3>Read more</h3>
+        
+            <li>
+    <aside class="dates">Aug 09 2019</aside>
+    <a href="/2019/08/09/hello-world/">Hello World</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 22 2019</aside>
+    <a href="/2019/07/22/Android开发-利用OkHTTP与服务器通信/">Android开发-利用OkHTTP与服务器通信</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 19 2019</aside>
+    <a href="/2019/07/19/Android开发-调用讯飞语音SDK/">Android开发-调用讯飞语音SDK</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 16 2019</aside>
+    <a href="/2019/07/16/Android开发-百度地图SDK的配置与使用/">Android开发-百度地图SDK的配置与使用</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 09 2019</aside>
+    <a href="/2019/07/09/Android开发-不同Activity之间的跳转/">Android开发-不同Activity之间的跳转</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 07 2019</aside>
+    <a href="/2019/07/07/JavaScript-学习笔记/">JavaScript-学习笔记</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 07 2019</aside>
+    <a href="/2019/07/07/OJ-Counting-Cliques/">OJ-Counting Cliques</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 06 2019</aside>
+    <a href="/2019/07/06/Android开发-上传和更新项目到GitHub/">Android开发-上传和更新项目到GitHub</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 04 2019</aside>
+    <a href="/2019/07/04/Android开发-蓝牙RSSI定位/">Android开发-蓝牙RSSI定位</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 02 2019</aside>
+    <a href="/2019/07/02/Android开发-蓝牙模块/">Android开发-蓝牙模块</a>
+    <h2></h2>
+</li>
+        
+        </ul>
+    
+ -->
+	<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<footer id="footer">
+	<div id="social">
+		<p class="small">© Copyright 2019
+			<a href="/"> lil-Xing </a>
+		</p>
+	</div>
+	<div class="powered-by" style="text-align: center;color: #bbb;">
+		<span id="busuanzi_container_site_uv">
+		访客数:<span id="busuanzi_value_site_uv"></span>
+		</span>
+		<span id="busuanzi_container_site_pv">
+			&nbsp;&nbsp;总访问量:<span id="busuanzi_value_site_pv"></span>
+		</span>
+	</div>
+</footer>
+
+</section>
+
+	<script src="//cdnjs.loli.net/ajax/libs/instantclick/3.0.1/instantclick.min.js" data-no-instant></script>
+	<script data-no-instant>
+		
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+			ga('create', 'UA-XXXXXXXX-Y', 'auto');
+			ga('send', 'pageview');
+  			InstantClick.on('change', function() {
+  				ga('send', 'pageview', location.pathname + location.search);
+			});
+		
+		InstantClick.init('mousedown');
+	</script>
+
+
+

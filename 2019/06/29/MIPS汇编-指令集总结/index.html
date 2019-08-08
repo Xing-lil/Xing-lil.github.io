@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+
+  <meta name="description" content="You Are The JavaScript In My HTML">
+
+
+<link rel="alternate" href="/atom.xml" title="Xing&#39;s Blog" type="application/atom+xml">
+<meta name="theme-color" content="#5badf0">
+<title>MIPS汇编-指令集总结 - Xing&#39;s Blog</title>
+<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+<link rel="shortcut icon" href="/favicon.png">
+<link rel="stylesheet" href="/css/style.css">
+
+<nav class="main-nav">
+	
+	    <a href="/"> Home</a>
+	
+	
+	    <a href="/about/">About</a>
+	
+	    <a href="/archives/">Archives</a>
+	
+	<!-- <a class="cta" href="/atom.xml" data-no-instant>Subscribe</a> -->
+</nav>
+
+<section id="wrapper">
+    <article class="post">
+    <header>
+        
+            <h1>MIPS汇编-指令集总结</h1>
+        
+        <h2 class="headline">Jun 29 2019
+        
+        </h2>
+    </header>
+</article>
+<section id="post-body"><h2 id="梳理的一些关于MIPS汇编的知识总结，希望自己不要把东西忘得太干净了。。。"><a href="#梳理的一些关于MIPS汇编的知识总结，希望自己不要把东西忘得太干净了。。。" class="headerlink" title="梳理的一些关于MIPS汇编的知识总结，希望自己不要把东西忘得太干净了。。。"></a>梳理的一些关于MIPS汇编的知识总结，希望自己不要把东西忘得太干净了。。。</h2><br>
+
+<br>
+
+<h1 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h1><p>MIPS架构中最基本的32个寄存器</p>
+<table style=" text-align:center;">
+    <tr>
+        <td> 寄存器编号
+        </td>
+        <td> 寄存器名字
+        </td>
+        <td> 用法
+        </td>
+    </tr>
+    <tr>
+        <td> 0
+        </td>
+        <td> $zero
+        </td>
+        <td> 存放常量0
+        </td>
+    </tr><tr>
+        <td> 1
+        </td>
+        <td> $at
+        </td>
+        <td> 保留给汇编程序使用（宏指令使用）
+        </td>
+    </tr><tr>
+        <td> 2-3
+        </td>
+        <td> $v0-$v1
+        </td>
+        <td> 存放函数返回值
+        </td>
+    </tr><tr>
+        <td> 4-7
+        </td>
+        <td> $a0-$a3
+        </td>
+        <td> 存放函数实参
+        </td>
+    </tr><tr>
+        <td> 8-15
+        </td>
+        <td> $t0-$t7
+        </td>
+        <td> 临时寄存器（调用者保存）
+        </td>
+    </tr><tr>
+        <td> 16-23
+        </td>
+        <td> $s0-$s7
+        </td>
+        <td> 临时寄存器（被调用者保存）
+        </td>
+    </tr><tr>
+        <td> 24-25
+        </td>
+        <td> $t8-$t9
+        </td>
+        <td> 临时寄存器（调用者保存）
+        </td>
+    </tr><tr>
+        <td> 26-27
+        </td>
+        <td> $k0-$k1
+        </td>
+        <td> 保留给操作系统内核
+        </td>
+    </tr><tr>
+        <td> 28
+        </td>
+        <td> $gp
+        </td>
+        <td> 全局指针寄存器
+        </td>
+    </tr><tr>
+        <td> 29
+        </td>
+        <td> $sp
+        </td>
+        <td> 栈指针寄存器
+        </td>
+    </tr><tr>
+        <td> 30
+        </td>
+        <td> $fp
+        </td>
+        <td> 栈帧指针寄存器
+        </td>
+    </tr><tr>
+        <td> 31
+        </td>
+        <td> $ra
+        </td>
+        <td> 存放函数返回地址
+        </td>
+    </tr> 
+</table>
+
+<h1 id="MIPS指令格式"><a href="#MIPS指令格式" class="headerlink" title="MIPS指令格式"></a>MIPS指令格式</h1><p>MIPS架构规定采用32位二进制位固定长度的指令格式，共分为三种指令格式</p>
+<h4 id="R格式（R：register）"><a href="#R格式（R：register）" class="headerlink" title="R格式（R：register）"></a>R格式（R：register）</h4><table style=" text-align:center;">
+    <tr>
+        <td> opcode
+        </td>
+        <td> register s(rs)
+        </td>
+        <td> register t(rt)
+        </td>
+        <td> register d(rd)
+        </td>
+        <td> shift amount
+        </td>
+        <td> function
+        </td>
+    </tr>
+    <tr>
+        <td> 6 bit
+        </td>
+        <td> 5 bit
+        </td>
+        <td> 5 bit
+        </td>
+        <td> 5 bit
+        </td>
+        <td> 5 bit
+        </td>
+        <td> 6 bit
+        </td>
+    </tr>
+</table>
+
+<h4 id="I格式（I：immediate）"><a href="#I格式（I：immediate）" class="headerlink" title="I格式（I：immediate）"></a>I格式（I：immediate）</h4><table style=" text-align:center;">
+    <tr>
+        <td> opcode
+        </td>
+        <td> register s(rs)
+        </td>
+        <td> register t(rt)
+        </td>
+        <td> immediate
+        </td>
+    </tr>
+    <tr>
+        <td> 6 bit
+        </td>
+        <td> 5 bit
+        </td>
+        <td> 5 bit
+        </td>
+        <td> 16 bit
+        </td>
+    </tr>
+</table>
+
+<h4 id="J格式（J：jump）"><a href="#J格式（J：jump）" class="headerlink" title="J格式（J：jump）"></a>J格式（J：jump）</h4><table style=" text-align:center;">
+    <tr>
+        <td> opcode
+        </td>
+        <td> address
+        </td>
+    </tr>
+    <tr>
+        <td> 6 bit
+        </td>
+        <td> 26 bit
+        </td>
+    </tr>
+</table>
+
+<h1 id="具体指令"><a href="#具体指令" class="headerlink" title="具体指令"></a>具体指令</h1><p>以下指令是非宏指令，分为：数据传送类指令、算术/逻辑运算类指令、移位指令、条件设置类指令、分支转移类指令、系统调用指令</p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>功能</th>
+<th>&emsp;应用实例&emsp;&emsp;&emsp;&emsp;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>lb</td>
+<td>从存储器中读取一个字节的数据到寄存器中</td>
+<td>lb $t0, 0($a0)</td>
+</tr>
+<tr>
+<td>lh</td>
+<td>从存储器中读取半个字的数据到寄存器中</td>
+<td>lh $t0, 0($a0)</td>
+</tr>
+<tr>
+<td>lw</td>
+<td>从存储器中读取一个字的数据到寄存器中</td>
+<td>lw $t0, 0($a0)</td>
+</tr>
+<tr>
+<td>ld</td>
+<td>从存储器中读取双字的数据到寄存器中</td>
+<td>ld $t0, 0($a0)</td>
+</tr>
+<tr>
+<td>lbu</td>
+<td>功能与LB指令相同，但读出的是不带符号的数据</td>
+<td>lbu $t0, 0($a0)</td>
+</tr>
+<tr>
+<td>lhu</td>
+<td>功能与LH指令相同，但读出的是不带符号的数据</td>
+<td>lhu $t0, 0($a0)</td>
+</tr>
+<tr>
+<td>lwu</td>
+<td>功能与LW指令相同，但读出的是不带符号的数据</td>
+<td>lwu $t0, 0($a0)</td>
+</tr>
+<tr>
+<td>sb</td>
+<td>把一个字节的数据从寄存器存储到存储器中</td>
+<td>sb $t0, 0($a0)</td>
+</tr>
+<tr>
+<td>sh</td>
+<td>把半个字节的数据从寄存器存储到存储器中</td>
+<td>sh $t0, 0($a0)</td>
+</tr>
+<tr>
+<td>sw</td>
+<td>把一个字的数据从寄存器存储到存储器中</td>
+<td>sw $t0, 0($a0)</td>
+</tr>
+<tr>
+<td>sd</td>
+<td>把两个字节的数据从寄存器存储到存储器中</td>
+<td>sd $t0, 0($a0)</td>
+</tr>
+<tr>
+<td>add</td>
+<td>把两个定点寄存器的内容相加，也就是定点加</td>
+<td>add $t0,$t1,$t2</td>
+</tr>
+<tr>
+<td>addi</td>
+<td>把一个寄存器的内容加上一个立即数</td>
+<td>addi $t0,$t1,imm</td>
+</tr>
+<tr>
+<td>addu</td>
+<td>不带符号的加</td>
+<td>addu $t0,$t1,$t2</td>
+</tr>
+<tr>
+<td>addiu</td>
+<td>把一个寄存器的内容加上一个无符号的立即数</td>
+<td>addiu $t0,$t1,imm</td>
+</tr>
+<tr>
+<td>sub</td>
+<td>两个寄存器的内容相减，也就是定点数的减</td>
+<td>sub $t0,$t1,$t2</td>
+</tr>
+<tr>
+<td>subu</td>
+<td>不带符号的减</td>
+<td>subu $t0,$t1,$t2</td>
+</tr>
+<tr>
+<td>div</td>
+<td>两个定点寄存器的内容相除，也就是定点除</td>
+<td>div $t0,$t1,$t2</td>
+</tr>
+<tr>
+<td>divu</td>
+<td>不带符号的除法运算</td>
+<td>divu $t0,$t1,$t2</td>
+</tr>
+<tr>
+<td>mult</td>
+<td>两个定点寄存器的内容相乘，也就是定点乘</td>
+<td>mult $t0,$t1,$t2</td>
+</tr>
+<tr>
+<td>multu</td>
+<td>不带符号的乘法运算</td>
+<td>multu $t0,$t1,$t2</td>
+</tr>
+<tr>
+<td>and</td>
+<td>与运算，两个寄存器中的内容相与</td>
+<td>and $t0,$t1,$t2</td>
+</tr>
+<tr>
+<td>andi</td>
+<td>一个寄存器中的内容与一个立即数相与</td>
+<td>andi $t0,$t1,imm</td>
+</tr>
+<tr>
+<td>or</td>
+<td>或运算，两个寄存器中的内容相或</td>
+<td>or $t0,$t1,$t2</td>
+</tr>
+<tr>
+<td>ori</td>
+<td>一个寄存器中的内容与一个立即数相或</td>
+<td>ori $t0,$t1,imm</td>
+</tr>
+<tr>
+<td>xor</td>
+<td>异或运算，两个寄存器中的内容相异或</td>
+<td>xor $t0,$t1,$t2</td>
+</tr>
+<tr>
+<td>xori</td>
+<td>一个寄存器中的内容与一个立即数异或</td>
+<td>xori $t0,$t1,imm</td>
+</tr>
+<tr>
+<td>beqz</td>
+<td>条件转移指令，当寄存器中内容为0时转移发生</td>
+<td>beqz $t0,Addr</td>
+</tr>
+<tr>
+<td>bnez</td>
+<td>条件转移指令，当寄存器中内容不为0时转移发生</td>
+<td>bnqz $t0,Addr</td>
+</tr>
+<tr>
+<td>beq</td>
+<td>条件转移指令，当两个寄存器内容相等时转移发生</td>
+<td>beq $t0,$a0</td>
+</tr>
+<tr>
+<td>bne</td>
+<td>条件转移指令，当两个寄存器中内容不等时转移发生</td>
+<td>bne $t0,$a0</td>
+</tr>
+<tr>
+<td>j</td>
+<td>无条件转移</td>
+<td>j Addr</td>
+</tr>
+<tr>
+<td>jr</td>
+<td>无条件寄存器间接跳转</td>
+<td>jr $ra</td>
+</tr>
+<tr>
+<td>jal</td>
+<td>无条件跳转并链接</td>
+<td>jal $t0,$ra</td>
+</tr>
+<tr>
+<td>jalr</td>
+<td>无条件跳转并寄存器链接</td>
+<td>jalr $ra</td>
+</tr>
+<tr>
+<td>mfhi</td>
+<td>将高位寄存器（HIGH）存放的内容复制到寄存器中</td>
+<td>mfhi $t0</td>
+</tr>
+<tr>
+<td>mflo</td>
+<td>将低位寄存器（LOW）存放的内容复制到寄存器中</td>
+<td>mflo $t0</td>
+</tr>
+<tr>
+<td>mthi</td>
+<td>将寄存器中的内容存放到高位寄存器中</td>
+<td>mthi $t0</td>
+</tr>
+<tr>
+<td>mtlo</td>
+<td>将寄存器中的内容存放到低位寄存器中</td>
+<td>mtlo $t0</td>
+</tr>
+<tr>
+<td>lui</td>
+<td>把一个16位的立即数填入到寄存器的高16位，低16位补零</td>
+<td>lui $t0,imm</td>
+</tr>
+<tr>
+<td>sll</td>
+<td>双字逻辑左移</td>
+<td>sll $t0,$t1,imm</td>
+</tr>
+<tr>
+<td>srl</td>
+<td>双字逻辑右移</td>
+<td>srl $t0,$t1,imm</td>
+</tr>
+<tr>
+<td>sra</td>
+<td>双字算术右移</td>
+<td>sra $t0,$t1,imm</td>
+</tr>
+<tr>
+<td>sllv</td>
+<td>可变的双字逻辑左移</td>
+<td>sllv $t0,$t1,imm</td>
+</tr>
+<tr>
+<td>srlv</td>
+<td>可变的双字罗伊右移</td>
+<td>srlv $t0,$t1,imm</td>
+</tr>
+<tr>
+<td>srav</td>
+<td>可变的双字算术右移</td>
+<td>srav $t0,$t1,imm</td>
+</tr>
+<tr>
+<td>slt</td>
+<td>若$t1小于$t2，设置$t0的值为1，否则设置$t0的值为0</td>
+<td>slt $t0,$t1,$t2</td>
+</tr>
+<tr>
+<td>slti</td>
+<td>若寄存器$t1小于立即数，设置$t0的值为1，否则设置$t0的值为0</td>
+<td>slti $t0,$t1,imm</td>
+</tr>
+<tr>
+<td>sltu</td>
+<td>功能与slt一致，但不带符号</td>
+<td>sltu $t0,$t1,$t2</td>
+</tr>
+<tr>
+<td>sltui</td>
+<td>功能与slti一致，但不带符号</td>
+<td>sltui $t0,$t1.imm</td>
+</tr>
+<tr>
+<td>syscall</td>
+<td>调用系统服务执行I/O操作</td>
+<td>syscall</td>
+</tr>
+</tbody></table>
+<h5 id="系统I-O服务"><a href="#系统I-O服务" class="headerlink" title="系统I/O服务"></a>系统I/O服务</h5><table>
+<thead>
+<tr>
+<th><strong>服务</strong></th>
+<th><strong>调用号</strong></th>
+<th><strong>参数</strong></th>
+<th><strong>结果</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>print_int</td>
+<td>1</td>
+<td>$a0   =  整型值</td>
+<td></td>
+</tr>
+<tr>
+<td>print_float</td>
+<td>2</td>
+<td>$f12   =  单精度浮点值</td>
+<td></td>
+</tr>
+<tr>
+<td>print_double</td>
+<td>3</td>
+<td>$f12   =  双精度浮点值</td>
+<td></td>
+</tr>
+<tr>
+<td>print_sting</td>
+<td>4</td>
+<td>$a0   =  字符串首地址</td>
+<td></td>
+</tr>
+<tr>
+<td>read_int</td>
+<td>5</td>
+<td></td>
+<td>输入值在$v0中</td>
+</tr>
+<tr>
+<td>read_float</td>
+<td>6</td>
+<td></td>
+<td>单精度浮点值在$f0中</td>
+</tr>
+<tr>
+<td>read_double</td>
+<td>7</td>
+<td></td>
+<td>双精度浮点值在$f0中</td>
+</tr>
+<tr>
+<td>read_string</td>
+<td>8</td>
+<td>字符串缓冲区首地址在$a0中   字符串缓冲区大小在$a1中</td>
+<td></td>
+</tr>
+<tr>
+<td>exit</td>
+<td>10</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>print_char</td>
+<td>11</td>
+<td>$a0   =  单字符</td>
+<td></td>
+</tr>
+<tr>
+<td>read_char</td>
+<td>12</td>
+<td></td>
+<td>单字符在$a0中</td>
+</tr>
+</tbody></table>
+</section>
+    
+
+    <footer id="post-meta" class="clearfix">
+        <a href="/">
+        <img class="avatar" src="/images/avatar.png">
+        <div>
+            <span class="dark">Xing&#39;s Blog</span>
+            <span>You Are The JavaScript In My HTML</span>
+        </div>
+        </a>
+        <section id="sharing">
+            <a title="Share to Twitter" class="twitter" href="https://github.com/"><span class="icon-twitter">GitHub</span></a>
+            <a title="Share to Facebook" class="facebook" href="https://www.zhihu.com/"><span class="icon-facebook-sign">ZhiHu</span>
+            </a>
+        </section>
+    </footer>
+
+<!-- 
+  <section id="comment">
+    <button class="btn" id="loadcmts" onclick="cmts.load();">Load Comments</button>
+    <div id="gitment"></div>
+    <script src='/js/gitment.browser.js'></script>
+    <link rel="stylesheet" href=''>
+    <script>
+      var cmts={
+        load:function cmts(){
+          var gitment = new Gitment({
+          
+            id: "MIPS汇编-指令集总结",
+          
+            owner: "",
+            repo: "",
+            oauth: {
+              client_id: "",
+              client_secret: "",
+            },
+          })
+          gitment.render('gitment');
+          var loadcmt = document.getElementById("loadcmts");
+          var imyourfather = loadcmt.parentNode;
+          imyourfather.removeChild(loadcmts)
+        }
+      }
+    </script>
+  </section>
+ -->
+
+<!-- 阅读更多 -->
+<!-- 
+    
+        <ul id="post-list" class="archive readmore">
+        <h3>Read more</h3>
+        
+            <li>
+    <aside class="dates">Aug 09 2019</aside>
+    <a href="/2019/08/09/hello-world/">Hello World</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 22 2019</aside>
+    <a href="/2019/07/22/Android开发-利用OkHTTP与服务器通信/">Android开发-利用OkHTTP与服务器通信</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 19 2019</aside>
+    <a href="/2019/07/19/Android开发-调用讯飞语音SDK/">Android开发-调用讯飞语音SDK</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 16 2019</aside>
+    <a href="/2019/07/16/Android开发-百度地图SDK的配置与使用/">Android开发-百度地图SDK的配置与使用</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 09 2019</aside>
+    <a href="/2019/07/09/Android开发-不同Activity之间的跳转/">Android开发-不同Activity之间的跳转</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 07 2019</aside>
+    <a href="/2019/07/07/JavaScript-学习笔记/">JavaScript-学习笔记</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 07 2019</aside>
+    <a href="/2019/07/07/OJ-Counting-Cliques/">OJ-Counting Cliques</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 06 2019</aside>
+    <a href="/2019/07/06/Android开发-上传和更新项目到GitHub/">Android开发-上传和更新项目到GitHub</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 04 2019</aside>
+    <a href="/2019/07/04/Android开发-蓝牙RSSI定位/">Android开发-蓝牙RSSI定位</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 02 2019</aside>
+    <a href="/2019/07/02/Android开发-蓝牙模块/">Android开发-蓝牙模块</a>
+    <h2></h2>
+</li>
+        
+        </ul>
+    
+ -->
+	<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<footer id="footer">
+	<div id="social">
+		<p class="small">© Copyright 2019
+			<a href="/"> lil-Xing </a>
+		</p>
+	</div>
+	<div class="powered-by" style="text-align: center;color: #bbb;">
+		<span id="busuanzi_container_site_uv">
+		访客数:<span id="busuanzi_value_site_uv"></span>
+		</span>
+		<span id="busuanzi_container_site_pv">
+			&nbsp;&nbsp;总访问量:<span id="busuanzi_value_site_pv"></span>
+		</span>
+	</div>
+</footer>
+
+</section>
+
+	<script src="//cdnjs.loli.net/ajax/libs/instantclick/3.0.1/instantclick.min.js" data-no-instant></script>
+	<script data-no-instant>
+		
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+			ga('create', 'UA-XXXXXXXX-Y', 'auto');
+			ga('send', 'pageview');
+  			InstantClick.on('change', function() {
+  				ga('send', 'pageview', location.pathname + location.search);
+			});
+		
+		InstantClick.init('mousedown');
+	</script>
+
+
+

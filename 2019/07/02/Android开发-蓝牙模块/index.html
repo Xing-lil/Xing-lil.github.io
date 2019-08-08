@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+
+  <meta name="description" content="You Are The JavaScript In My HTML">
+
+
+<link rel="alternate" href="/atom.xml" title="Xing&#39;s Blog" type="application/atom+xml">
+<meta name="theme-color" content="#5badf0">
+<title>Android开发-蓝牙模块 - Xing&#39;s Blog</title>
+<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+<link rel="shortcut icon" href="/favicon.png">
+<link rel="stylesheet" href="/css/style.css">
+
+<nav class="main-nav">
+	
+	    <a href="/"> Home</a>
+	
+	
+	    <a href="/about/">About</a>
+	
+	    <a href="/archives/">Archives</a>
+	
+	<!-- <a class="cta" href="/atom.xml" data-no-instant>Subscribe</a> -->
+</nav>
+
+<section id="wrapper">
+    <article class="post">
+    <header>
+        
+            <h1>Android开发-蓝牙模块</h1>
+        
+        <h2 class="headline">Jul 02 2019
+        
+        </h2>
+    </header>
+</article>
+<section id="post-body"><h2 id="本文是基于Android-Studio下的Bluetooth的相关开发，记录一些开发笔记。"><a href="#本文是基于Android-Studio下的Bluetooth的相关开发，记录一些开发笔记。" class="headerlink" title="本文是基于Android Studio下的Bluetooth的相关开发，记录一些开发笔记。"></a>本文是基于Android Studio下的Bluetooth的相关开发，记录一些开发笔记。</h2><p><br><br></p>
+<h1 id="API基础"><a href="#API基础" class="headerlink" title="API基础"></a>API基础</h1><p><strong>BluetoothAdapter</strong>——本地蓝牙适配器<br>    BluetoothAdapter是所有蓝牙交互的入口，通过这个类，能够发现其他的蓝牙设备，查询已配对设备的列表，使用已知的MAC地址来实例化一个BluetoothDevice对象，并且创建一个BluetoothServerSocket对象来监听与其他设备的通信。 </p>
+<p><strong>BluetoothDevice</strong>——远程的蓝牙设备<br>    使用这个类通过BluetoothSocket或查询诸如名称、地址、类和配对状态等设备信息来请求跟远程设备的连接。 </p>
+<p><strong>BluetoothSocket</strong>——蓝牙socket接口<br>    和TCPSocket类似，允许一个应用程序跟另一个蓝牙设备通过输入流和输出流进行数据交换的连接点。 </p>
+<p><strong>BluetoothServerSocket</strong>——监听传入请求服务接口<br>    和TCPServerSocket类似，等待连接当远程蓝牙设备请求跟本设备建立连接请求时，BluetoothServerSocket会在连接被接收时返回一个被连接的BluetoothSocket对象。 </p>
+<h1 id="蓝牙权限"><a href="#蓝牙权限" class="headerlink" title="蓝牙权限"></a>蓝牙权限</h1><p>​    在调用Bluetooth的各种API之前先要赋予应用使用Bluetooth的各种权限，一般只需要这两个权限。</p>
+<p><strong>android.permission.BLUETOOTH</strong> : 允许程序连接到已配对的蓝牙设备, 请求连接/接收连接/传输数据需要改权限, 主要用于对配对后进行操作。</p>
+<p><strong>android.permission.BLUETOOTH_ADMIN</strong> : 允许程序发现和配对蓝牙设备, 该权限用来管理蓝牙设备, 有了这个权限, 应用才能使用本机的蓝牙设备, 主要用于对配对前的操作。</p>
+<p>​    在进行调用之前一定要记得在<strong>AndroidManifest.xml</strong>中授权，如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.BLUETOOTH_ADMIN"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.BLUETOOTH"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="初始化蓝牙"><a href="#初始化蓝牙" class="headerlink" title="初始化蓝牙"></a>初始化蓝牙</h1><p>利用BluetoothAdapter的getDefaultAdapter()方法初始化蓝牙</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();</span><br></pre></td></tr></table></figure>
+
+<h1 id="判断设备是否支持蓝牙"><a href="#判断设备是否支持蓝牙" class="headerlink" title="判断设备是否支持蓝牙"></a>判断设备是否支持蓝牙</h1><p>通过上面的适配器的初始化是否成功复制来判断设备是否支持蓝牙</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initBluetooth</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();</span><br><span class="line">    <span class="keyword">if</span> (bluetoothAdapter == <span class="keyword">null</span>) &#123;</span><br><span class="line">        Log.d(TAG, <span class="string">"notSupport"</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        Log.d(TAG, <span class="string">"Support"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="启动蓝牙"><a href="#启动蓝牙" class="headerlink" title="启动蓝牙"></a>启动蓝牙</h1><p>调用BluetoothAdapter的enable()方法即可开启蓝牙</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">openBluetooth</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">boolean</span> openResult = bluetoothAdapter.enable();</span><br><span class="line">    <span class="keyword">if</span> (openResult) &#123;</span><br><span class="line">        Log.d(TAG, <span class="string">"start"</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        Log.d(TAG, <span class="string">"false"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="搜索外部设备"><a href="#搜索外部设备" class="headerlink" title="搜索外部设备"></a>搜索外部设备</h1><p>调用startDiscovery()方法即可开始搜索外部设备，startDiscovery()方法调用的时候默认执行下面的onReceive()方法，具体的参数获取在onReceive()方法中实现。（需要注意的是onReceive()方法中不能执行耗时操作，因为onReceive()的生命周期很短，有可能广播接收者结束，子线程还没有结束，这时广播接收者所在的进程有可能被系统清理掉。）startDiscovery()方法是一个异步方法，它会对其他蓝牙设备进行搜索，持续时间为12秒，搜索过程其实是在System Service中进行，可以通过cancelDiscovery()方法来停止这个搜索。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">startDiscovery</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (bluetoothAdapter.isEnabled()) &#123;</span><br><span class="line">        bluetoothAdapter.startDiscovery();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        Intent intent = <span class="keyword">new</span> Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);</span><br><span class="line">        startActivityForResult(intent, <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="注册广播"><a href="#注册广播" class="headerlink" title="注册广播"></a>注册广播</h1><p>在执行onReceive()方法之前，一定要记得先注册广播，否则无法正常调用onReceive()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">registerBoard</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    IntentFilter filter = <span class="keyword">new</span> IntentFilter(BluetoothDevice.ACTION_FOUND);</span><br><span class="line">    filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);</span><br><span class="line">    registerReceiver(broadcastReceiver, filter);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="在onReceive中处理广播"><a href="#在onReceive中处理广播" class="headerlink" title="在onReceive中处理广播"></a>在onReceive中处理广播</h1><p>在这里分别获取外部蓝牙设备的name、address（mac地址）以及rssi（信号强度），设置一个String变量接收广播信号，共有三种广播信号，ACTION_DISCOVERY_START(开始搜索)，ACTION_DISCOVERY_FINISHED(搜索结束)和ACTION_FOUND(找到设备)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> BroadcastReceiver broadcastReceiver = <span class="keyword">new</span> BroadcastReceiver() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onReceive</span><span class="params">(Context context, Intent intent)</span> </span>&#123;</span><br><span class="line">        String action = intent.getAction();</span><br><span class="line">        <span class="keyword">if</span> (action.equals(BluetoothDevice.ACTION_FOUND)) &#123;</span><br><span class="line">            BluetoothDevice device;</span><br><span class="line">            device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);</span><br><span class="line">            String name, address, rssi, deviceString = <span class="string">""</span>;</span><br><span class="line">            <span class="keyword">if</span> (device.getBondState() != BluetoothDevice.BOND_BONDED) &#123;</span><br><span class="line">                name = device.getName();</span><br><span class="line">                address = device.getAddress();</span><br><span class="line">                rssi = Integer.toString(intent.getShortExtra</span><br><span class="line">                                        (BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE));</span><br><span class="line">                <span class="keyword">if</span> (!bluetoothAddresses.contains(address)) &#123;</span><br><span class="line">                    bluetoothAddresses.add(address);</span><br><span class="line">                    <span class="keyword">if</span> (name == <span class="keyword">null</span> || name.equals(<span class="string">""</span>)) &#123;</span><br><span class="line">                        deviceString = address + <span class="string">" - RSSI "</span> + rssi + <span class="string">"dBm"</span>;</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        deviceString = name + <span class="string">" - RSSI "</span> + rssi + <span class="string">"dBm"</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    bluetoothDevices.add(deviceString);</span><br><span class="line">                &#125;</span><br><span class="line">                Log.e(TAG, <span class="string">"-------------------"</span>);</span><br><span class="line">                Log.e(TAG, <span class="string">"discover:"</span> + deviceString);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (action.equals(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)) &#123;</span><br><span class="line">            Log.e(TAG, <span class="string">"End"</span>);</span><br><span class="line">            bluetoothAdapter.cancelDiscovery();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><p>还有许多其他功能，例如：设置蓝牙的可见性、关闭蓝牙、获取蓝牙的状态、与特定设备建立连接、蓝牙模块的通信套接字编程等，不一一赘述。</p>
+</section>
+    
+
+    <footer id="post-meta" class="clearfix">
+        <a href="/">
+        <img class="avatar" src="/images/avatar.png">
+        <div>
+            <span class="dark">Xing&#39;s Blog</span>
+            <span>You Are The JavaScript In My HTML</span>
+        </div>
+        </a>
+        <section id="sharing">
+            <a title="Share to Twitter" class="twitter" href="https://github.com/"><span class="icon-twitter">GitHub</span></a>
+            <a title="Share to Facebook" class="facebook" href="https://www.zhihu.com/"><span class="icon-facebook-sign">ZhiHu</span>
+            </a>
+        </section>
+    </footer>
+
+<!-- 
+  <section id="comment">
+    <button class="btn" id="loadcmts" onclick="cmts.load();">Load Comments</button>
+    <div id="gitment"></div>
+    <script src='/js/gitment.browser.js'></script>
+    <link rel="stylesheet" href=''>
+    <script>
+      var cmts={
+        load:function cmts(){
+          var gitment = new Gitment({
+          
+            id: "Android开发-蓝牙模块",
+          
+            owner: "",
+            repo: "",
+            oauth: {
+              client_id: "",
+              client_secret: "",
+            },
+          })
+          gitment.render('gitment');
+          var loadcmt = document.getElementById("loadcmts");
+          var imyourfather = loadcmt.parentNode;
+          imyourfather.removeChild(loadcmts)
+        }
+      }
+    </script>
+  </section>
+ -->
+
+<!-- 阅读更多 -->
+<!-- 
+    
+        <ul id="post-list" class="archive readmore">
+        <h3>Read more</h3>
+        
+            <li>
+    <aside class="dates">Aug 09 2019</aside>
+    <a href="/2019/08/09/hello-world/">Hello World</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 22 2019</aside>
+    <a href="/2019/07/22/Android开发-利用OkHTTP与服务器通信/">Android开发-利用OkHTTP与服务器通信</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 19 2019</aside>
+    <a href="/2019/07/19/Android开发-调用讯飞语音SDK/">Android开发-调用讯飞语音SDK</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 16 2019</aside>
+    <a href="/2019/07/16/Android开发-百度地图SDK的配置与使用/">Android开发-百度地图SDK的配置与使用</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 09 2019</aside>
+    <a href="/2019/07/09/Android开发-不同Activity之间的跳转/">Android开发-不同Activity之间的跳转</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 07 2019</aside>
+    <a href="/2019/07/07/JavaScript-学习笔记/">JavaScript-学习笔记</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 07 2019</aside>
+    <a href="/2019/07/07/OJ-Counting-Cliques/">OJ-Counting Cliques</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 06 2019</aside>
+    <a href="/2019/07/06/Android开发-上传和更新项目到GitHub/">Android开发-上传和更新项目到GitHub</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 04 2019</aside>
+    <a href="/2019/07/04/Android开发-蓝牙RSSI定位/">Android开发-蓝牙RSSI定位</a>
+    <h2></h2>
+</li>
+        
+            <li>
+    <aside class="dates">Jul 02 2019</aside>
+    <a href="/2019/07/02/Android开发-蓝牙模块/">Android开发-蓝牙模块</a>
+    <h2></h2>
+</li>
+        
+        </ul>
+    
+ -->
+	<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<footer id="footer">
+	<div id="social">
+		<p class="small">© Copyright 2019
+			<a href="/"> lil-Xing </a>
+		</p>
+	</div>
+	<div class="powered-by" style="text-align: center;color: #bbb;">
+		<span id="busuanzi_container_site_uv">
+		访客数:<span id="busuanzi_value_site_uv"></span>
+		</span>
+		<span id="busuanzi_container_site_pv">
+			&nbsp;&nbsp;总访问量:<span id="busuanzi_value_site_pv"></span>
+		</span>
+	</div>
+</footer>
+
+</section>
+
+	<script src="//cdnjs.loli.net/ajax/libs/instantclick/3.0.1/instantclick.min.js" data-no-instant></script>
+	<script data-no-instant>
+		
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+			ga('create', 'UA-XXXXXXXX-Y', 'auto');
+			ga('send', 'pageview');
+  			InstantClick.on('change', function() {
+  				ga('send', 'pageview', location.pathname + location.search);
+			});
+		
+		InstantClick.init('mousedown');
+	</script>
+
+
+
