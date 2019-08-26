@@ -47,22 +47,22 @@
 </li>
 <li><p>创建应用</p>
 <p>先要创建一个应用，填好应用名称，将类型选择为Android SDK，服务全选，然后填入自己的SHA1和PackageName，下面介绍如何获取。</p>
-<p><img src="Android%E5%BC%80%E5%8F%91-%E7%99%BE%E5%BA%A6%E5%9C%B0%E5%9B%BESDK%E7%9A%84%E9%85%8D%E7%BD%AE%E4%B8%8E%E4%BD%BF%E7%94%A8/1.png" alt="1"></p>
+<p><img src="/.com//1.png" alt="1"></p>
 </li>
 <li><p>获取SHA1以及PackageName</p>
 <p>在Android studio环境下，利用下面方法获取SHA1是比较简便的，在cmd下先cd到 .android这个目录，然后运行如下指令，密匙口令默认为空，直接换行跳过即可，成功进入后就可以看见指纹证书SHA1辽。（注意：如果暂时不用把项目发布出去开发版SHA1和发布版SHA1都填一样的即可）</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">keytool -list -v -keystore debug.keystore</span><br></pre></td></tr></table></figure>
 
-<p><img src="Android%E5%BC%80%E5%8F%91-%E7%99%BE%E5%BA%A6%E5%9C%B0%E5%9B%BESDK%E7%9A%84%E9%85%8D%E7%BD%AE%E4%B8%8E%E4%BD%BF%E7%94%A8/2.png" alt="2"></p>
+<p><img src="/.com//2.png" alt="2"></p>
 <p>而PackageName就是项目的包文件，如果你确定可以直接写，若不确定则可以在AndrManifest.xml中找到package这个属性，后面这个包名就是了。</p>
-<p><img src="Android%E5%BC%80%E5%8F%91-%E7%99%BE%E5%BA%A6%E5%9C%B0%E5%9B%BESDK%E7%9A%84%E9%85%8D%E7%BD%AE%E4%B8%8E%E4%BD%BF%E7%94%A8/3.png" alt="3"></p>
+<p><img src="/.com//3.png" alt="3"></p>
 <p>将SHA1以及PackageName填写完成后提交，而后可以在应用信息中看见Key了，如下便是。</p>
-<p><img src="Android%E5%BC%80%E5%8F%91-%E7%99%BE%E5%BA%A6%E5%9C%B0%E5%9B%BESDK%E7%9A%84%E9%85%8D%E7%BD%AE%E4%B8%8E%E4%BD%BF%E7%94%A8/4.png" alt="4"></p>
+<p><img src="/.com//4.png" alt="4"></p>
 <p>注意，当Android项目打包成APK后是可以在符合版本的手机上直接运行的，但是开发时要有自己的Key才可以进行开发调试，否则无法调用百度的相关SDK，其他地图导航类似。</p>
 </li>
 </ol>
 <h1 id="二、下载百度地图SDK"><a href="#二、下载百度地图SDK" class="headerlink" title="二、下载百度地图SDK"></a>二、下载百度地图SDK</h1><p><a href="http://lbsyun.baidu.com/index.php?title=sdk/download&action#selected=mapsdk_basicmap,mapsdk_searchfunction,mapsdk_lbscloudsearch,mapsdk_calculationtool,mapsdk_radar" target="_blank" rel="noopener">下载地址</a></p>
-<p><img src="Android%E5%BC%80%E5%8F%91-%E7%99%BE%E5%BA%A6%E5%9C%B0%E5%9B%BESDK%E7%9A%84%E9%85%8D%E7%BD%AE%E4%B8%8E%E4%BD%BF%E7%94%A8/5.png" alt="5"></p>
+<p><img src="/.com//5.png" alt="5"></p>
 <p>选择自己项目需要用到的功能下载即可。</p>
 <h1 id="三、SDK的导入"><a href="#三、SDK的导入" class="headerlink" title="三、SDK的导入"></a>三、SDK的导入</h1><p>注意如果项目需要用到驾车导航相关SDK，即上图有勾选驾车导航，由于SDK的更新不完善，所有这里的SDK导入非常麻烦，下次有空再细说，这里只介绍除了驾车导航的其他SDK的导入。</p>
 <ol>
@@ -71,7 +71,7 @@
 <li>然后在main的目录先新建一个jniLibs文件夹，将SDK中armeabi这个文件夹拷入，这里不建议将全部版本都拷入</li>
 <li>最后rebuild项目一下就可以了</li>
 </ol>
-<p><img src="Android%E5%BC%80%E5%8F%91-%E7%99%BE%E5%BA%A6%E5%9C%B0%E5%9B%BESDK%E7%9A%84%E9%85%8D%E7%BD%AE%E4%B8%8E%E4%BD%BF%E7%94%A8/6.png" alt="6"></p>
+<p><img src="/.com//6.png" alt="6"></p>
 <h1 id="四、SDK的基本配置使用"><a href="#四、SDK的基本配置使用" class="headerlink" title="四、SDK的基本配置使用"></a>四、SDK的基本配置使用</h1><p>第一步：创建并配置工程（具体方法参见工程配置部分的介绍）；</p>
 <p>第二步：在AndroidManifest中添加开发密钥、所需权限等信息；</p>
 <p>1）在application中添加开发密钥</p>
